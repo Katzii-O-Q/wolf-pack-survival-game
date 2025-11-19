@@ -12,6 +12,20 @@ This game will use the 'random' Python library to keep the game unpredictable.
 # This grabs the 'random' toolkit.
 import random
 
+def load_high_score():
+    # The 'try' block attempts the normal operation.
+    try:
+        # 'r' is for Read mode.
+        with open("highscore.txt", "r") as f:
+            # Files store text (strings), so we convert it to an integer (int).
+            return int(f.read())
+    # The 'except' block handles the expected error if the file doesn't exist.
+    except FileNotFoundError:
+        return 0 # If the file isn't found, the score is 0.
+
+# Load the score and store it in a variable for comparison later.
+high_score = load_high_score()
+
 # --- SECTION 1: SETUP ---
 # Sets the starting stats for your wolf.
 wolf_health = 100
@@ -20,8 +34,8 @@ pack_size = 0
 day = 1
 game_running = True
 
-print("Welcome to the Wolf Pack Survival Game!")
-print("You are a lone wolf. Survive as long as you can.")
+print("🐾 Welcome to the Wolf Pack Survival Game! 🐾")
+print("You are a lone wolf 🐺. Survive as long as you can.")
 
 # --- SECTION 3: THE MAIN LOOP ---
 # This loop will continue to run until wolf_health is 0 or game_running is false.
@@ -29,7 +43,8 @@ while wolf_health > 0 and game_running == True:
 
     # A. Display Status
     print("-" * 30)
-    print(f"DAY: {day} | HEALTH: {wolf_health} | HUNGER: {wolf_hunger} | PACK SIZE: {pack_size}")
+    print(f"HIGH SCORE: {high_score}")
+    print(f"DAY: {day} ☀️ | HEALTH: {wolf_health} ❤️ | HUNGER: {wolf_hunger} 🥩 | PACK SIZE: {pack_size} 🐾")
     print("Options: [1] Hunt  [2] Rest  [3] Recruit  [4] Quit")
 
     # B. Get User Input
@@ -38,10 +53,10 @@ while wolf_health > 0 and game_running == True:
     # C. Logic Handling (The "Brain")
     if choice == "1":
         print("\n--- THE HUNT ---")
-        print("You creep silently into the forest, sniffing the air...")
+        print("You creep silently into the forest 🌳, sniffing the air...")
 
         # 1. Define Your Prey List
-        possible_prey = ["Rabbit", "Deer", "Wild Turkey", "Bison"]
+        possible_prey = ["Rabbit 🐇", "Deer 🦌", "Wild Turkey 🦃", "Bison 🦬"]
 
         # 2. Pick a Random Animal
         prey = random.choice(possible_prey)
@@ -90,6 +105,7 @@ while wolf_health > 0 and game_running == True:
         # This is where the resting logic goes
         print("\n--- RESTING ---")
         print("You curl up in your den to rest. The sun sets and rises again.")
+        print("🌞🌝🌞")
 
         day += 1
 
@@ -101,7 +117,7 @@ while wolf_health > 0 and game_running == True:
         # If Health goes over 100, reset it to 100.
         if wolf_health > 100:
             wolf_health = 100
-            print("You feel fully rested! (Health maxed out)")
+            print("You feel rested, some health has been restored.")
 
         # Warn the user if they are getting too hungry while they sleep.
         if wolf_hunger > 80:
@@ -115,8 +131,8 @@ while wolf_health > 0 and game_running == True:
         search_roll = random.randint(1, 10)
 
         if search_roll > 5:
-            print("A stray wolf emerges from the shadows and bows to you.")
-            print("You gained a pack member!")
+            print("🐺 A stray wolf emerges from the shadows and bows to you.")
+            print("🐾 You gained a pack member!")
             pack_size += 1
         else:
             print("Silence. Or worse... a rival pack chases you off!")
@@ -145,6 +161,14 @@ while wolf_health > 0 and game_running == True:
         print("\n--- GAME OVER ---")
         print("You starved to death")
         wolf_health = 0 # Kill the wolf to stop the loop
+
+# Check if the player set a new record.
+if day > high_score:
+    print("🏆 NEW HIGH SCORE! 🏆")
+
+    with open("highscore.txt", "w") as f:
+        # We must convert the integer back to a string before writing to the file.
+        f.write(str(day))
 
 # --- SECTION 3: GAME OVER ---
 print("-" * 30)
